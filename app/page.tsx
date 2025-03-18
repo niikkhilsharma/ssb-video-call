@@ -7,9 +7,7 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col items-center">
-			<h1 className="mb-4 mt-20 text-4xl font-extrabold leading-none tracking-tight text-gray-900">
-				<span className="text-black">NextJS</span> x <span className="text-blue-500">Agora</span>
-			</h1>
+			<h1 className="mb-4 mt-20 text-4xl font-extrabold leading-none tracking-tight text-gray-900">Join your SSB Call</h1>
 			<form
 				onSubmit={e => {
 					e.preventDefault()

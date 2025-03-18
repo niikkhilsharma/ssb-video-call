@@ -51,66 +51,40 @@ const Basics = () => {
 
 	// Calculate grid layout dynamically based on total participant count
 	const gridLayout = useMemo(() => {
-		const totalParticipants = remoteUsers.length + 1 // +1 for local user
-
-		// Logic to determine optimal grid layout
-		if (totalParticipants <= 1) {
-			return 'grid-cols-1 grid-rows-1'
-		} else if (totalParticipants <= 2) {
-			return 'grid-cols-2 grid-rows-1'
-		} else if (totalParticipants <= 4) {
-			return 'grid-cols-2 grid-rows-2'
-		} else if (totalParticipants <= 6) {
-			return 'grid-cols-3 grid-rows-2'
-		} else if (totalParticipants <= 9) {
-			return 'grid-cols-3 grid-rows-3'
-		} else if (totalParticipants <= 12) {
-			return 'grid-cols-4 grid-rows-3'
-		} else if (totalParticipants <= 16) {
-			return 'grid-cols-4 grid-rows-4'
-		} else if (totalParticipants <= 25) {
-			return 'grid-cols-5 grid-rows-5'
-		} else if (totalParticipants <= 36) {
-			return 'grid-cols-6 grid-rows-6'
-		} else {
-			// For extremely large numbers, use a scrollable container
-			return 'grid-cols-6 grid-rows-6 overflow-y-auto'
-		}
-	}, [remoteUsers.length])
-
-	// Calculate video size based on participant count
-	const videoSizeClass = useMemo(() => {
 		const totalParticipants = remoteUsers.length + 1
-
-		if (totalParticipants <= 4) {
-			return 'h-full' // Larger videos for fewer participants
-		} else if (totalParticipants <= 9) {
-			return 'h-full' // Medium-sized videos
-		} else {
-			return 'h-full' // Smaller videos for many participants
-		}
+		if (totalParticipants <= 1) return 'grid-cols-1 grid-rows-1'
+		if (totalParticipants <= 2) return 'grid-cols-1 grid-rows-2'
+		if (totalParticipants <= 4) return 'grid-cols-2 grid-rows-2'
+		if (totalParticipants <= 6) return 'grid-cols-3 grid-rows-2'
+		if (totalParticipants <= 9) return 'grid-cols-3 grid-rows-3'
+		if (totalParticipants <= 12) return 'grid-cols-4 grid-rows-3'
+		if (totalParticipants <= 16) return 'grid-cols-4 grid-rows-4'
+		if (totalParticipants <= 25) return 'grid-cols-5 grid-rows-5'
+		return 'grid-cols-6 grid-rows-6 overflow-y-auto'
 	}, [remoteUsers.length])
+
+	const cover = `relative rounded-lg overflow-hidden bg-black/10 max-h-64 sm:max-h-full`
 
 	return (
 		<>
 			{isConnected && (
 				<div className="h-svh max-h-svh overflow-hidden">
 					<div className={cn('w-full h-[90%] grid gap-2 p-2', gridLayout)}>
-						<div className={cn('relative rounded-lg overflow-hidden bg-black/10', videoSizeClass)}>
+						<div className={cn(cover)} id="myVideo">
 							<LocalUser
 								audioTrack={localMicrophoneTrack}
 								cameraOn={cameraOn}
 								micOn={micOn}
+								className="object-contain"
 								playAudio={false}
 								videoTrack={localCameraTrack}
-								className="h-full w-full object-cover"
 							/>
 							<div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-sm">You</div>
 						</div>
 
 						{remoteUsers.map(user => (
-							<div key={user.uid} className={cn('relative rounded-lg overflow-hidden bg-black/10', videoSizeClass)}>
-								<RemoteUser user={user} className="h-full w-full object-cover" />
+							<div key={user.uid} className={cn(cover)} id="remoteVideo">
+								<RemoteUser user={user} />
 								<div className="absolute bottom-2 left-2 bg-black/50 text-white px-2 py-1 rounded text-sm">{user.uid}</div>
 							</div>
 						))}
